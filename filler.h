@@ -6,7 +6,7 @@
 /*   By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 17:06:47 by tkuhar            #+#    #+#             */
-/*   Updated: 2018/05/16 18:52:12 by tkuhar           ###   ########.fr       */
+/*   Updated: 2018/05/17 21:53:02 by tkuhar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,3 +16,10 @@ typedef struct		s_params
 	int		y;
 	int		x;
 }					t_params;
+
+typedef struct		s_pice
+{
+	int		x;
+	int		y;
+	short	**pice;
+}					t_pice;
