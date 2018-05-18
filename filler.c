@@ -6,7 +6,7 @@
 /*   By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 20:48:21 by tkuhar            #+#    #+#             */
-/*   Updated: 2018/05/17 22:54:22 by tkuhar           ###   ########.fr       */
+/*   Updated: 2018/05/18 18:40:02 by tkuhar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <fcntl.h>
 #include "filler.h"
 
-void		printarr(short **map, t_params *p, int fd)
+void		printarr(short **map, t_map *p, int fd)
 {
 	int	i;
 	int	j;
@@ -50,16 +50,16 @@ void		printpice(short **map, t_pice *p, int fd)
 	return ;
 }
 
-t_params	*readparam(void)
+t_map	*readparam(void)
 {
-	t_params	*p;
+	t_map	*p;
 	char		*s;
 	int			i;
 
 	s = 0;
-	p = malloc(sizeof(t_params));
+	p = malloc(sizeof(t_map));
 	get_next_line(0,&s);
-	p->player = s[10];
+	p->player = s[10] == '1' ? 'O' : 'X';
 	free(s);
 	get_next_line(0, &s);
 	p->x = 0;
@@ -74,28 +74,47 @@ t_params	*readparam(void)
 	return(p);
 }
 
-short		**readmap(t_params *p)
+t_map		**fillmap(t_map *p)
 {
-	short	**map;
+	int		i;
+	int		j;
+	short	m;
+
+	m = (p->x + p->y);
+	while(m-- > 0 && (i = -1))
+		while(++i < p->y && (j = -1))
+			while(++j < p->x)
+				if (p->map[i][j] != 0 && p->map[i][j] != -1)
+					p->map[i][j] = 1 + minf(
+						(i - 1 > 0		? p->map[i - 1][j] : -2),
+						(j - 1 > 0		? p->map[i][j - 1] : -2),
+						(i + 1 < p->y	? p->map[i + 1][j] : -2),
+						(j + 1 < p->x	? p->map[i][j + 1] : -2));
+	return (p);
+}
+
+
+t_map		**readmap(t_map *p)
+{
 	int		i;
 	int		j;
 	char	*s;
 
-	map = malloc(sizeof(short *) * (p->y));
+	p->map = malloc(sizeof(short *) * (p->y));
 	i = -1;
 	while(++i < p->y)
 	{
-		map[i] = malloc(sizeof(short) * (p->x));
+		p->map[i] = malloc(sizeof(short) * (p->x));
 		get_next_line(0, &s);
 		j = -1;
 		while (++j < p->x)
 		if (s[j + 4] != '.')
-			map[i][j] = (s[j + 4] == 'X' || s[j + 4] == 'x') ? 0 : -1;			//!need to be modified
+			p->map[i][j] = (ft_toupper(s[j + 4]) == p->player) ? -1 : 0;
 		else
-			map[i][j] = -2;
+			p->map[i][j] = -2;
 		free(s);
 	}
-	return (map);
+	return (fillmap(p));
 }
 
 short		minf(short t1, short t2, short t3, short t4)
@@ -115,24 +134,6 @@ short		minf(short t1, short t2, short t3, short t4)
 	return (m11);
 }
 
-short		**fillmap(t_params *p, short **map)
-{
-	int		i;
-	int		j;
-	short	m;
-
-	m = p->x + p->y ;
-	while(m-- > 0 && (i = -1))
-		while(++i < p->y && (j = -1))
-			while(++j < p->x)
-				if (map[i][j] != 0 && map[i][j] != -1)
-					map[i][j] = 1 + minf(
-						map[i - 1 > 0 ? i - 1 : 0][j],
-						map[i + 1 < p->y ? i + 1 : 0][j],
-						map[i][j - 1 > 0? j - 1 : 0],
-						map[i][j + 1 < p->x ? j + 1 : 0]);
-	return (map);
-}
 
 t_pice		*readpiceparam(void)
 {
@@ -154,7 +155,7 @@ t_pice		*readpiceparam(void)
 	return (pice);
 }
 
-short		**readpice(t_pice *p)
+t_pice		*readpice(t_pice *p)
 {
 	short	**pice;
 	int		i;
@@ -172,34 +173,76 @@ short		**readpice(t_pice *p)
 			pice[i][j] = s[j] == '*' ? 1 : 0;
 		free(s);
 	}
-	return (pice);
+	p->pice = pice;
+	return (p);
+}
+
+int			count(t_pice *p, t_map *m, int x, int y)
+{
+	int i;
+	int j;
+	int sum;
+	int dots;
+
+	dots == 0;
+	sum = 0;
+	i = -1;
+	while (++i < p->y && j == -1)
+		while (++j < p->x)
+			if ((p->pice)[i][j])
+			{
+				if ((m->map)[i + y][j + x] == 0)
+					return (0);
+				if ((m->map)[i + y][j + x] == -1)
+					dots++;
+				else
+					sum  += (m->map)[i + y][j + x];
+			}
+	return (dots == 1 ? sum : 0);
+}
+
+t_pice		*placepice(t_pice *p, t_map *m)
+{
+	int i;
+	int j;
+	int max;
+	int tmp;
+
+	i = -1;
+	while(++i < (m->y - p->y) && (j = -1))
+		while(++j < m->x - p->x)
+		{
+			tmp = count(p, m, j, i);
+			if (max > tmp)
+			{
+				p->
+			}
+		}
 }
 
 int			main(int argc, char *argv[])
 {
 	char		*s;
-	short		**map;
-	short		**pice;
+	char		buf[100];
 	int			d;
-	t_params	*p;
+	t_map	*p;
 	t_pice		*pc;
 
+	d = open("./1.txt", O_RDWR);
 	p = readparam();
 	get_next_line(0,&s);
-	map = readmap (p);
-	map = fillmap(p,map);
+	
+	{
+		while (0 < read(d, buf, 1))
+			;
+	p = readmap (p);
 	pc = readpiceparam();
-	pice = readpice(pc);
-	
-	
-	
-	d = open("./1.txt", O_RDWR);
-	printpice(pice, pc, d);
-	printarr(map, p, d);
-	//dprintf(d, "x:	y:");
-	close(d);
-	
-	
+	pc = readpice(pc);
+		printpice(pc->pice, pc, d);
+		dprintf(d, "my player: %c \n", p->player);
+		dprintf(d, "___________________________________________________________\n\n");
+		close(d);
+	}
 	free(s);
 //	system("leaks a.out");
 	return 0;
