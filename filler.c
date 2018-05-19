@@ -6,7 +6,7 @@
 /*   By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 20:48:21 by tkuhar            #+#    #+#             */
-/*   Updated: 2018/05/18 18:40:02 by tkuhar           ###   ########.fr       */
+/*   Updated: 2018/05/19 20:55:40 by tkuhar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,12 @@ void		printarr(short **map, t_map *p, int fd)
 		while(++j < p->x)
 			dprintf(fd, "%2d ", map[i][j]);
 		//	printf("%2d ", map[i][j]);
-		dprintf(fd, "|\n");
+		dprintf(fd, "|%d\n", i);
 		//printf("\n");
 	}
 	return ;
 }
+
 void		printpice(short **map, t_pice *p, int fd)
 {
 	int	i;
@@ -50,18 +51,43 @@ void		printpice(short **map, t_pice *p, int fd)
 	return ;
 }
 
-t_map	*readparam(void)
+short		minf(short t1, short t2, short t3, short t4)
 {
-	t_map	*p;
-	char		*s;
-	int			i;
+	int m11;
+	int m22;
 
-	s = 0;
+	t1 = t1 >= 0 ? t1 : 255;
+	t2 = t2 >= 0 ? t2 : 255;
+	t3 = t3 >= 0 ? t3 : 255;
+	t4 = t4 >= 0 ? t4 : 255;
+	m11 = t1 > t2 ? t2 : t1;
+	m22 = t3 > t4 ? t4 : t3;
+	m11 = m22 < m11 ? m22 : m11;
+	if (m11 == 255)
+		return (-3);
+	return (m11);
+}
+
+t_map		*readplayer(void)
+{
+	char	*s;
+	t_map	*p;
+
 	p = malloc(sizeof(t_map));
 	get_next_line(0,&s);
 	p->player = s[10] == '1' ? 'O' : 'X';
 	free(s);
-	get_next_line(0, &s);
+	return (p);
+}
+
+t_map		*readparam(t_map *p)
+{
+	char		*s;
+	int			i;
+
+	s = 0;
+	if (!get_next_line(0, &s))
+		return (0);
 	p->x = 0;
 	p->y = 0;
 	i = 8;
@@ -74,7 +100,7 @@ t_map	*readparam(void)
 	return(p);
 }
 
-t_map		**fillmap(t_map *p)
+t_map		*fillmap(t_map *p)
 {
 	int		i;
 	int		j;
@@ -94,7 +120,7 @@ t_map		**fillmap(t_map *p)
 }
 
 
-t_map		**readmap(t_map *p)
+t_map		*readmap(t_map *p)
 {
 	int		i;
 	int		j;
@@ -116,24 +142,6 @@ t_map		**readmap(t_map *p)
 	}
 	return (fillmap(p));
 }
-
-short		minf(short t1, short t2, short t3, short t4)
-{
-	int m11;
-	int m22;
-
-	t1 = t1 >= 0 ? t1 : 255;
-	t2 = t2 >= 0 ? t2 : 255;
-	t3 = t3 >= 0 ? t3 : 255;
-	t4 = t4 >= 0 ? t4 : 255;
-	m11 = t1 > t2 ? t2 : t1;
-	m22 = t3 > t4 ? t4 : t3;
-	m11 = m22 < m11 ? m22 : m11;
-	if (m11 == 255)
-		return (-3);
-	return (m11);
-}
-
 
 t_pice		*readpiceparam(void)
 {
@@ -184,19 +192,22 @@ int			count(t_pice *p, t_map *m, int x, int y)
 	int sum;
 	int dots;
 
-	dots == 0;
+	dots = 0;
 	sum = 0;
 	i = -1;
-	while (++i < p->y && j == -1)
+	int fuck = 0;
+	while (++i < p->y && (j = -1))
 		while (++j < p->x)
 			if ((p->pice)[i][j])
 			{
+				if (i + y < 0 || i + y >= m->y || j + x < 0 || j + x >= m->x )
+						return (0);
 				if ((m->map)[i + y][j + x] == 0)
 					return (0);
 				if ((m->map)[i + y][j + x] == -1)
 					dots++;
 				else
-					sum  += (m->map)[i + y][j + x];
+					sum  = sum + (m->map)[i + y][j + x];
 			}
 	return (dots == 1 ? sum : 0);
 }
@@ -205,45 +216,72 @@ t_pice		*placepice(t_pice *p, t_map *m)
 {
 	int i;
 	int j;
-	int max;
+	int min;
 	int tmp;
 
-	i = -1;
-	while(++i < (m->y - p->y) && (j = -1))
-		while(++j < m->x - p->x)
+	min = 1000;
+	i = -p->y;
+	while(++i < (m->y) && (j = -p->x))
+		while(++j < m->x)
 		{
 			tmp = count(p, m, j, i);
-			if (max > tmp)
+			if (tmp && min > tmp)
 			{
-				p->
+				min = tmp;
+				p->x_ins = j;
+				p->y_ins = i;
 			}
 		}
+	return (p);
 }
 
 int			main(int argc, char *argv[])
 {
 	char		*s;
-	char		buf[100];
-	int			d;
-	t_map	*p;
+	t_map		*m;
 	t_pice		*pc;
 
+	char		buf[100];
+	int			d;
 	d = open("./1.txt", O_RDWR);
-	p = readparam();
-	get_next_line(0,&s);
+	m = readplayer();
 	
-	{
-		while (0 < read(d, buf, 1))
-			;
-	p = readmap (p);
-	pc = readpiceparam();
-	pc = readpice(pc);
-		printpice(pc->pice, pc, d);
-		dprintf(d, "my player: %c \n", p->player);
-		dprintf(d, "___________________________________________________________\n\n");
-		close(d);
-	}
-	free(s);
+	while(m = readparam(m));
+		get_next_line(0,&s);
+		m = readmap (m);
+		pc = readpiceparam();
+		pc = readpice(pc);
+		pc = placepice(pc, m);
+		printf ("%d %d\n", pc->y_ins, pc->x_ins);
+		
+
+	while()
+	//	m = readplayer();
+	//	get_next_line(0,&s);
+		m = readparam(m);
+		get_next_line(0,&s);
+		m = readmap (m);
+		pc = readpiceparam();
+		pc = readpice(pc);
+		pc = placepice(pc, m);
+		printf ("%d %d\n", pc->y_ins, pc->x_ins);
+		
+																					/*while (0 < read(d, buf, 1))
+																						;
+																					dprintf(d, "\n___________________________________________________________\n\n");
+																					dprintf(d, " 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6\n");
+																					dprintf(d, "___________________________________________________________\n");
+																					printarr(m->map, m, d);
+																					dprintf(d, "\n___________________________________________________________\n");
+																					printpice(pc->pice, pc, d);
+																					dprintf(d, "my player: %c \n", m->player);
+																					dprintf(d, "\n___________________________________________________________\n\n");
+																					dprintf (d,"<got (%c): [%d, %d]\n", m->player, pc->y_ins, pc->x_ins);
+																				
+		*/ free (m);
+		free (s);
+	
+	close(d);
 //	system("leaks a.out");
-	return 0;
+	return (0);
 }
