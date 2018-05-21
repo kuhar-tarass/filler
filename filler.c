@@ -6,7 +6,7 @@
 /*   By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 20:48:21 by tkuhar            #+#    #+#             */
-/*   Updated: 2018/05/21 22:32:23 by tkuhar           ###   ########.fr       */
+/*   Updated: 2018/05/21 23:14:34 by tkuhar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,10 @@ int			main(int argc, char *argv[])
 		if((pc = placepice(pc, m)))
 			ft_printf ("%d %d\n", pc->y_ins, pc->x_ins);
 		else
+		{
+			ft_printf ("\n");
 			break;
+		}
 	}
 	return (0);
 }
