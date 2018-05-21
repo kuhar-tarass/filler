@@ -6,7 +6,7 @@
 /*   By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 20:48:21 by tkuhar            #+#    #+#             */
-/*   Updated: 2018/05/19 20:55:40 by tkuhar           ###   ########.fr       */
+/*   Updated: 2018/05/21 22:32:23 by tkuhar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include "filler.h"
-
+#include "printf/ft_printf.h"
+/*
 void		printarr(short **map, t_map *p, int fd)
 {
 	int	i;
@@ -50,6 +51,7 @@ void		printpice(short **map, t_pice *p, int fd)
 	}
 	return ;
 }
+*/
 
 short		minf(short t1, short t2, short t3, short t4)
 {
@@ -118,7 +120,6 @@ t_map		*fillmap(t_map *p)
 						(j + 1 < p->x	? p->map[i][j + 1] : -2));
 	return (p);
 }
-
 
 t_map		*readmap(t_map *p)
 {
@@ -232,7 +233,7 @@ t_pice		*placepice(t_pice *p, t_map *m)
 				p->y_ins = i;
 			}
 		}
-	return (p);
+	return (min != 1000 ? p : 0);
 }
 
 int			main(int argc, char *argv[])
@@ -243,45 +244,18 @@ int			main(int argc, char *argv[])
 
 	char		buf[100];
 	int			d;
-	d = open("./1.txt", O_RDWR);
 	m = readplayer();
-	
-	while(m = readparam(m));
-		get_next_line(0,&s);
-		m = readmap (m);
-		pc = readpiceparam();
-		pc = readpice(pc);
-		pc = placepice(pc, m);
-		printf ("%d %d\n", pc->y_ins, pc->x_ins);
-		
-
-	while()
-	//	m = readplayer();
-	//	get_next_line(0,&s);
+	while(1)
+	{
 		m = readparam(m);
 		get_next_line(0,&s);
 		m = readmap (m);
 		pc = readpiceparam();
 		pc = readpice(pc);
-		pc = placepice(pc, m);
-		printf ("%d %d\n", pc->y_ins, pc->x_ins);
-		
-																					/*while (0 < read(d, buf, 1))
-																						;
-																					dprintf(d, "\n___________________________________________________________\n\n");
-																					dprintf(d, " 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6\n");
-																					dprintf(d, "___________________________________________________________\n");
-																					printarr(m->map, m, d);
-																					dprintf(d, "\n___________________________________________________________\n");
-																					printpice(pc->pice, pc, d);
-																					dprintf(d, "my player: %c \n", m->player);
-																					dprintf(d, "\n___________________________________________________________\n\n");
-																					dprintf (d,"<got (%c): [%d, %d]\n", m->player, pc->y_ins, pc->x_ins);
-																				
-		*/ free (m);
-		free (s);
-	
-	close(d);
-//	system("leaks a.out");
+		if((pc = placepice(pc, m)))
+			ft_printf ("%d %d\n", pc->y_ins, pc->x_ins);
+		else
+			break;
+	}
 	return (0);
 }
