@@ -6,7 +6,7 @@
 /*   By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 20:48:21 by tkuhar            #+#    #+#             */
-/*   Updated: 2018/05/21 23:14:34 by tkuhar           ###   ########.fr       */
+/*   Updated: 2018/05/22 20:13:01 by tkuhar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <fcntl.h>
 #include "filler.h"
 #include "printf/ft_printf.h"
-/*
+
 void		printarr(short **map, t_map *p, int fd)
 {
 	int	i;
@@ -51,7 +51,6 @@ void		printpice(short **map, t_pice *p, int fd)
 	}
 	return ;
 }
-*/
 
 short		minf(short t1, short t2, short t3, short t4)
 {
@@ -201,8 +200,8 @@ int			count(t_pice *p, t_map *m, int x, int y)
 		while (++j < p->x)
 			if ((p->pice)[i][j])
 			{
-				if (i + y < 0 || i + y >= m->y || j + x < 0 || j + x >= m->x )
-						return (0);
+				if (i + y < 0 || i + y >= m->y || j + x < 0 || j + x >= m->x)
+					return (0);
 				if ((m->map)[i + y][j + x] == 0)
 					return (0);
 				if ((m->map)[i + y][j + x] == -1)
@@ -210,6 +209,7 @@ int			count(t_pice *p, t_map *m, int x, int y)
 				else
 					sum  = sum + (m->map)[i + y][j + x];
 			}
+	sum = sum > 0 ? sum : 999999;
 	return (dots == 1 ? sum : 0);
 }
 
@@ -220,7 +220,7 @@ t_pice		*placepice(t_pice *p, t_map *m)
 	int min;
 	int tmp;
 
-	min = 1000;
+	min = 1000000;
 	i = -p->y;
 	while(++i < (m->y) && (j = -p->x))
 		while(++j < m->x)
@@ -233,7 +233,7 @@ t_pice		*placepice(t_pice *p, t_map *m)
 				p->y_ins = i;
 			}
 		}
-	return (min != 1000 ? p : 0);
+	return (min != 1000000 ? p : 0);
 }
 
 int			main(int argc, char *argv[])
@@ -242,8 +242,6 @@ int			main(int argc, char *argv[])
 	t_map		*m;
 	t_pice		*pc;
 
-	char		buf[100];
-	int			d;
 	m = readplayer();
 	while(1)
 	{
@@ -256,9 +254,12 @@ int			main(int argc, char *argv[])
 			ft_printf ("%d %d\n", pc->y_ins, pc->x_ins);
 		else
 		{
-			ft_printf ("\n");
+			ft_printf ("0 0\n");
 			break;
 		}
+		free(m->map);
+		free(pc);
 	}
+	
 	return (0);
 }

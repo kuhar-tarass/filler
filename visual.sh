@@ -1,1 +1,1 @@
-sed -e "s/\(O\)/`tput setaf 2`\1`tput op`/g" | sed -e "s/\(X\)/`tput setaf 1`\1`tput op`/g"
+sed -e "s|\(O\)|`tput setaf 9`\1`tput op`|g; s|\(X\)|`tput setaf 10`\1`tput op`|g;" 
