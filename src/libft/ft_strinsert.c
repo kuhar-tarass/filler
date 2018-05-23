@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filler.h                                           :+:      :+:    :+:   */
+/*   ft_strinsert.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/05/16 17:06:47 by tkuhar            #+#    #+#             */
-/*   Updated: 2018/05/18 17:30:06 by tkuhar           ###   ########.fr       */
+/*   Created: 2018/05/12 17:38:22 by tkuhar            #+#    #+#             */
+/*   Updated: 2018/05/12 17:44:34 by tkuhar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-typedef struct		s_map
-{
-	int		player;
-	int		x;
-	int		y;
-	short	**map;
-}					t_map;
+#include "ft_printf.h"
 
-typedef struct		s_pice
+char		*ft_strinsert(char **dst, char *src, int index)
 {
-	int		x;
-	int		y;
-	short	**pice;
-	int		x_ins;
-	int		y_ins;
-}					t_pice;
+	int		i;
+	char	*tmp;
+	int		dstl;
+
+	dstl = ft_strlen(*dst);
+	if (dst == 0 || !(tmp = ft_strnew(dstl + ft_strlen(src))) || index > dstl)
+		return (0);
+	i = -1;
+	while (++i < index)
+		tmp[i] = (*dst)[i];
+	while (*src)
+		tmp[i++] = *src++;
+	while (index < dstl)
+		tmp[i++] = (*dst)[index++];
+	free(*dst);
+	return (tmp);
+}

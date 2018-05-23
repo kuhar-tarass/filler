@@ -6,7 +6,7 @@
 #    By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/22 20:42:59 by tkuhar            #+#    #+#              #
-#    Updated: 2018/05/16 17:00:16 by tkuhar           ###   ########.fr        #
+#    Updated: 2018/05/23 19:36:33 by tkuhar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,24 +34,35 @@ ft_strlcat.c ft_strlen.c ft_strmap.c ft_strmapi.c ft_strncat.c ft_strncmp.c \
 ft_strncpy.c ft_strnequ.c ft_strnew.c ft_strnstr.c ft_strrchr.c ft_strsplit.c \
 ft_strstr.c ft_strsub.c ft_strtrim.c ft_tolower.c ft_toupper.c\
 ft_lstpush_back.c ft_lstpush_front.c ft_strsplit_lst.c ft_exp.c ft_lstfind.c \
-get_next_line.c
+
+PRINTF = get_next_line.c \
+flags_processing.c \
+ft_getcharw.c \
+ft_getstrw.c \
+ft_itoa_base.c \
+ft_printf.c \
+ft_strinsert.c \
+func_call.c \
+func_print.c
 
 OBJ= $(SRC:%.c=%.o)
+PRINTFOBJ= $(PRINTF:%.c=%.o)
 
 OK_STRING	=***	$(NAME) created		***
 
-all: $(NAME)
+all: $(NAME) libftprintf.a
 
-$(NAME): $(OBJ) 
-	@ar rcs $(NAME) $(OBJ) 
+$(NAME) libftprintf.a : $(OBJ) $(PRINTFOBJ)
+	@ar rcs $(NAME) $(OBJ)
+	@ar rcs libftprintf.a $(PRINTFOBJ)
+
 %.o:%.c
-	@$(CC) $(FLAGS) -c $< -o $@
-	@printf "$(CYAN)compiling $<$(COLOR_OFF)\n"
+	@$(CC) $(FLAGS) -c $< -o $@ -I ../../include
+
 clean:
-	@rm -f $(OBJ)
-	@printf "$(YELLOW)remove OBJ$(COLOR_OFF)\n"
+	@rm -f $(OBJ) $(PRINTFOBJ)
+
 fclean: clean
-	@rm -f $(NAME)
-	@printf "$(RED)remove $(NAME)$(COLOR_OFF)\n"
+	@rm -f $(NAME) libftprintf.a
 
 re: fclean all

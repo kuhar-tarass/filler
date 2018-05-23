@@ -6,7 +6,7 @@
 #    By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/16 16:30:15 by tkuhar            #+#    #+#              #
-#    Updated: 2018/05/16 17:01:42 by tkuhar           ###   ########.fr        #
+#    Updated: 2018/05/23 19:52:43 by tkuhar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,42 +20,36 @@ PURPLE	=\033[0;35m#		# Purple
 CYAN	=\033[0;36m#		# Cyan
 WHITE	=\033[0;37m#		# White
 
-CC= gcc
-FLAGS= -Wall -Wextra -Werror
-NAME= libftprintf.a
-SRC= flags_processing.c \
-ft_getcharw.c \
-ft_getstrw.c \
-ft_itoa_base.c \
-ft_printf.c \
-ft_strinsert.c \
-func_call.c \
-func_print.c
+CC=		gcc
+
+FLAGS=	-Wall -Wextra -Werror
+
+NAME=	tkuhar.filler
+
+SRC=	filler.c \
+		read.c
+
+INCLD=	./include
+
 OBJ= $(SRC:%.c=%.o)
 
 
 OK_STRING    =***	$(NAME) created		***
 
 all: $(NAME)
-##all: gcc 
-
-$(NAME): $(OBJ)
-	@$(MAKE) -C ./libft
-	@ar rcs $(NAME) $(OBJ) ./libft/*.o
+	
+$(NAME):
+	@$(MAKE) -C ./src/libft
+	gcc $(addprefix ./src/, $(SRC)) -o $(NAME) ./src/libft/libft.a ./src/libft/libftprintf.a -I ./include
 	@printf "\n$(GREEN)$(OK_STRING)\n\n"
-
-%.o:%.c
-	@$(CC) $(FLAGS) -c $< -o $@ 
-	@printf "$(CYAN)compiling $<$(COLOR_OFF)\n"
-
 clean:
 	@rm -f $(OBJ)
-	@$(MAKE) clean -C ./libft
+	@$(MAKE) clean -C ./src/libft
 	@printf  "$(YELLOW)remove OBJ"
 fclean:
 	@rm -f $(OBJ)
 	@rm -f $(NAME)
-	@$(MAKE) fclean -C ./libft
+	@$(MAKE) fclean -C ./src/libft
 	@printf "$(YELLOW)remove OBJ$(COLOR_OFF)\n"
 	@printf "$(RED)remove $(NAME)$(COLOR_OFF)\n"
 
