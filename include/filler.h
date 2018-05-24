@@ -6,7 +6,7 @@
 /*   By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 17:06:47 by tkuhar            #+#    #+#             */
-/*   Updated: 2018/05/23 19:50:37 by tkuhar           ###   ########.fr       */
+/*   Updated: 2018/05/24 19:02:01 by tkuhar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 # include <stdio.h>
 # include "libft.h"
 # include "ft_printf.h"
-
 
 typedef struct		s_map
 {
@@ -34,10 +33,10 @@ typedef struct		s_pice
 	int		y_ins;
 }					t_pice;
 
-t_map		*readplayer(void);
-t_map		*readparam(t_map *p);
-t_map		*readmap(t_map *p);
-t_pice		*readpiceparam(void);
-t_pice		*readpice(t_pice *p);
+t_map				*readplayer(void);
+t_map				*readparam(t_map *p);
+t_map				*readmap(t_map *p);
+t_pice				*readpiceparam(void);
+t_pice				*readpice(t_pice *p);
 
 #endif

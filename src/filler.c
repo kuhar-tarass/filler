@@ -6,7 +6,7 @@
 /*   By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 20:48:21 by tkuhar            #+#    #+#             */
-/*   Updated: 2018/05/23 19:45:11 by tkuhar           ###   ########.fr       */
+/*   Updated: 2018/05/24 18:48:32 by tkuhar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static t_pice		*placepice(t_pice *p, t_map *m)
 	return (min != 1000000 ? p : 0);
 }
 
-int			main(int argc, char *argv[])
+int					main(void)
 {
 	char		*s;
 	t_map		*m;
