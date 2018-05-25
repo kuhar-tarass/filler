@@ -6,7 +6,7 @@
 #    By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/16 16:30:15 by tkuhar            #+#    #+#              #
-#    Updated: 2018/05/24 22:10:48 by tkuhar           ###   ########.fr        #
+#    Updated: 2018/05/25 15:59:40 by tkuhar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,7 @@ fclean:
 	@printf "$(RED)remove $(NAME)$(COLOR_OFF)\n"
 
 visual:
-	@gcc  $(addprefix ./src/, visual.c) -o visual ./src/libft/libft.a ./src/libft/libftprintf.a -I ./include
+	@gcc $(FALGS) ./src/visual.c ./src/visual2.c -o visual ./src/libft/libft.a ./src/libft/libftprintf.a -I ./include
 	@printf "\n$(GREEN)DONE$(COLOR_OFF)\n\n"
 
 rmvisual:

@@ -1,12 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   visual.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/05/25 13:50:26 by tkuhar            #+#    #+#             */
+/*   Updated: 2018/05/25 16:10:34 by tkuhar           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef VISUAL_H
 # define VISUAL_H
+# include "libft.h"
+# include <locale.h>
+# include <stdio.h>
 
 # define HOME() 			printf(ESC "[H")
 # define CLSCR()			printf(ESC "[2J")
 # define GOTOXY(x,y)		printf(ESC "[%d;%dH", y, x);
 # define VISIBLE_CURSOR(o)	printf(ESC "[?25%c", (o ? 'h' : 'l'));
 
-# define RESETCOLOR()				printf(ESC "[0m")
+# define RESETCOLOR()		printf(ESC "[0m")
 # define SET_COLOR(color)	printf(ESC "[%dm",color)
 # define ESC "\033"
 
@@ -48,5 +63,11 @@ typedef struct	s_f
 	int			x;
 	int			y;
 }				t_f;
+
+void			drawline(int j);
+void			printsymb(t_area *n, char *s);
+void			fill(t_area *n);
+void			printmap(t_area *n);
+void			writespace(t_area *n);
 
 #endif
