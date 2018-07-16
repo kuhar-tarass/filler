@@ -22,39 +22,57 @@ WHITE	=\033[0;37m#		# White
 
 CC=		gcc
 
-FLAGS=	-Wall -Wextra -Werror
+FLAGS=	#-Wall -Wextra -Werror
 
 NAME=	tkuhar.filler
+NAME2=	tkuhar2.filler
 
-SRC=	filler.c \
-		read.c
+
+
+SRCNAME=	filler.c \
+			read.c
 
 INCLD=	./include
 
 OBJ= $(SRC:%.c=%.o)
 
+SRC=$(addprefix ./src/, $(SRCNAME))
+
+LIBFT= ./src/libft/libft.a
+LIBFTPRINTF= ./src/libft/libftprintf.a
 
 OK_STRING    =***	$(NAME) created		***
 
 all: $(NAME)
 	
-$(NAME):
-	@$(MAKE) -C ./src/libft
-	gcc $(FLAGS) $(addprefix ./src/, $(SRC)) -o $(NAME) ./src/libft/libft.a ./src/libft/libftprintf.a -I ./include
+$(NAME): $(LIBFT)
+	gcc $(FLAGS) $(SRC) -o $(NAME)  $(LIBFTPRINTF)  $(LIBFT) -I ./include
 	@printf "\n$(GREEN)$(OK_STRING)\n\n"
+
+second: $(LIBFT) 
+	gcc $(FLAGS) $(SRC) -o $(NAME2) $(LIBFTPRINTF)  $(LIBFT) -I ./include
+	@printf "\n$(GREEN)$(OK_STRING)\n\n"
+
+$(LIBFT) $(LIBFTPRINTF): 
+	@$(MAKE) -C ./src/libft
+
+
 clean:
 	@rm -f $(OBJ)
 	@$(MAKE) clean -C ./src/libft
 	@printf  "$(YELLOW)remove OBJ"
-fclean:
-	@rm -f $(OBJ)
-	@rm -f $(NAME)
-	@$(MAKE) fclean -C ./src/libft
-	@printf "$(YELLOW)remove OBJ$(COLOR_OFF)\n"
-	@printf "$(RED)remove $(NAME)$(COLOR_OFF)\n"
 
-visual:
-	@gcc $(FALGS) ./src/visual.c ./src/visual2.c -o visual ./src/libft/libft.a ./src/libft/libftprintf.a -I ./include
+fclean:
+	@printf "$(YELLOW)remove OBJ$(COLOR_OFF)\n"
+	@$(MAKE) fclean -C ./src/libft
+	@rm -f $(OBJ)
+	@printf "$(RED)remove $(NAME)$(COLOR_OFF)\n"
+	@rm -f $(NAME)
+	@printf "$(RED)remove $(NAME2)$(COLOR_OFF)\n"
+	@rm -f $(NAME2)
+
+visual: $(LIBFT) $(LIBFTPRINTF)
+	@gcc $(FALGS) ./src/visual.c ./src/visual2.c -o visual ./src/libft/libftprintf.a ./src/libft/libft.a -I ./include
 	@printf "\n$(GREEN)DONE$(COLOR_OFF)\n\n"
 
 rmvisual:
